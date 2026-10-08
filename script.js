@@ -4,6 +4,8 @@ const buttons = document.querySelectorAll(".button");
 display.classList.add("flashing");
 
 let value = "";
+let result = "";
+let operator = "";
 
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -13,26 +15,48 @@ buttons.forEach((button) => {
       value = 0;
       display.textContent = value;
       value = "";
+      result = "";
+      operator = "";
     }
 
     // prettier-ignore
     else if (
       button.textContent === "="
     ) {
-      let calculation = value.trim();
-
       if (
-        calculation.endsWith("+") ||
-        calculation.endsWith("-") ||
-        calculation.endsWith("*") ||
-        calculation.endsWith("/")
+        value.endsWith("+") ||
+        value.endsWith("-") ||
+        value.endsWith("*") ||
+        value.endsWith("/")
       ) {
         return;
       }
 
-      value = eval(calculation);
-      value = Number(value.toFixed(10));
-      display.textContent = value;
+      if (operator !== "") {
+        let number = Number(value);
+
+        if (operator === "+") {
+          result = result + number;
+        }
+
+        else if (operator === "-") {
+          result = result - number;
+        }
+
+        else if (operator === "*") {
+          result = result * number;
+        }
+
+        else if (operator === "/") {
+          result = result / number;
+        }
+
+        value = Number(result.toFixed(10));
+        display.textContent = value;
+
+        result = "";
+        operator = "";
+      }
     }
 
     // prettier-ignore
@@ -42,8 +66,39 @@ buttons.forEach((button) => {
       button.textContent === "*" ||
       button.textContent === "/"
     ) {
-      value = value + " " + button.textContent + " ";
-      display.textContent = value;
+      if (value === "") {
+        return;
+      }
+
+      if (operator === "") {
+        result = Number(value);
+      }
+
+      else {
+        let number = Number(value);
+
+        if (operator === "+") {
+          result = result + number;
+        }
+
+        else if (operator === "-") {
+          result = result - number;
+        }
+
+        else if (operator === "*") {
+          result = result * number;
+        }
+
+        else if (operator === "/") {
+          result = result / number;
+        }
+
+        result = Number(result.toFixed(10));
+      }
+
+      operator = button.textContent;
+      value = "";
+      display.textContent = result + " " + operator + " ";
     }
 
     // prettier-ignore
